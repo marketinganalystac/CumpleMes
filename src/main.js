@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js' 
 const sb=createClient(import.meta.env.VITE_SUPABASE_URL,import.meta.env.VITE_SUPABASE_ANON_KEY)
 const D={dias:14,sem:3,mes:12,medio:1,aviso:7,semana:7,modo:'mes',ref:'',marks:'42d, 2m, 4m, 6m, 9m, 12m, 15m, 18m, 24m'};
 const AREAS=['Motor grueso','Motor fino','Lenguaje','Cognitivo','Social y emocional'];
