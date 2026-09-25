@@ -26,7 +26,7 @@ async function load(){const [a,b]=await Promise.all([sb.from('ninos').select('*,
 async function auth(a){const c={email:$('em').value.trim(),password:$('pw').value};S.em=c.email;
   const r=a==='login'?await sb.auth.signInWithPassword(c):await sb.auth.signUp(c);
   S.err=r.error?r.error.message:(a==='signup'&&!r.data.session?'Revisa tu correo para confirmar la cuenta.':'');render()}
-function loginHtml(){return `<section class="card"><h2>Inicia sesión</h2><div class="g2"><div><label for="em">Correo</label><input id="em" type="email" autocomplete="email" value="${esc(S.em)}"></div><div><label for="pw">Contraseña</label><input id="pw" type="password" autocomplete="current-password"></div></div><div class="btns" style="margin-top:14px"><button data-act="login">Entrar</button><button class="sec" data-act="signup">Crear cuenta</button></div>${S.err?`<div class="msg" style="color:var(--bad)" role="alert">${esc(S.err)}</div>`:''}</section>`}
+function loginHtml(){return `<section class="card"><h2>👋 Inicia sesión</h2><div class="g2"><div><label for="em">Correo</label><input id="em" type="email" autocomplete="email" value="${esc(S.em)}"></div><div><label for="pw">Contraseña</label><input id="pw" type="password" autocomplete="current-password"></div></div><div class="btns" style="margin-top:14px"><button data-act="login">Entrar</button><button class="sec" data-act="signup">Crear cuenta</button></div>${S.err?`<div class="msg" style="color:var(--bad)" role="alert">${esc(S.err)}</div>`:''}</section>`}
 function addMonths(b,n){const t=b.m-1+n,y=b.y+Math.floor(t/12),m=((t%12)+12)%12;return new Date(y,m,Math.min(b.d,dim(y,m)),12)}
 function diff(b,r){let tm=(r.y-b.y)*12+r.m-b.m;if(addMonths(b,tm)>r.date)tm--;return {y:Math.floor(tm/12),m:tm%12,d:dd(addMonths(b,tm),r.date)}}
 function clinical(days,x){const tm=x.y*12+x.m;
@@ -56,7 +56,7 @@ function week(){const o=[];S.kids.forEach(k=>{const nm=k.nm||'Sin nombre';
   const i=info(k);if(i&&!i.bad){let n=i.tm,d=addMonths(i.b,n);if(dd(i.r.date,d)<0||n===0){n=i.tm+1;d=addMonths(i.b,n)}
     const l=dd(i.r.date,d);if(l<=cfg.semana)o.push({l,t:`${nm} cumple ${mlab(n)} ${l===0?'hoy':l===1?'mañana':'en '+pl(l,'día','días')}, ${fd(d)}`})}});
   return o.sort((a,b)=>a.l-b.l)}
-function weekHtml(){const w=week();return `<section class="card"><h2>Esta semana</h2>`+(w.length?`<ul class="tl">${w.map(x=>`<li><span class="t">${esc(x.t)}</span></li>`).join('')}</ul><div class="btns" style="margin-top:12px"><button class="sec" data-act="copyw">Copiar recordatorios</button></div><div class="msg" role="status">${esc(S.msg)}</div>`:`<p class="note" style="margin:0">Sin visitas ni cumple mes en los próximos ${pl(cfg.semana,'día','días')}.</p>`)+'</section>'}
+function weekHtml(){const w=week();return `<section class="card"><h2>📅 Esta semana</h2>`+(w.length?`<ul class="tl">${w.map(x=>`<li><span class="t">${esc(x.t)}</span></li>`).join('')}</ul><div class="btns" style="margin-top:12px"><button class="sec" data-act="copyw">Copiar recordatorios</button></div><div class="msg" role="status">${esc(S.msg)}</div>`:`<p class="note" style="margin:0">Sin visitas ni cumple mes en los próximos ${pl(cfg.semana,'día','días')}.</p>`)+'</section>'}
 function copyTxt(t){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{S.msg='Copiado.';render()},()=>{S.msg=t;render()})}
 function info(k,rs){if(!k.bs)return null;const b=pd(k.bs),r=pd(rs||iso(now())),days=dd(b.date,r.date);
   if(days<0)return {bad:1};const x=diff(b,r);return {b,r,days,x,tm:x.y*12+x.m,cl:clinical(days,x),inf:informal(x),
@@ -79,7 +79,7 @@ function exportAll(){
   S.msg='Registro descargado.';render()}
 
 function cfgHtml(){const n=(k,l,h)=>`<div><label>${l}</label><input type="number" min="0" data-c="${k}" value="${cfg[k]}"><div class="hint">${h}</div></div>`;
-return `<section class="card"><h2>Configuración</h2><div class="g2">
+return `<section class="card"><h2>⚙️ Configuración</h2><div class="g2">
 ${n('dias','Contar en días hasta (días)','Antes de este número de días la edad se muestra en días.')}
 ${n('sem','Contar en semanas hasta (meses)','Hasta esta edad se muestra en semanas.')}
 ${n('mes','Contar en meses hasta (meses)','Desde aquí se muestra en años y meses (12 = 1 año).')}
@@ -93,11 +93,11 @@ ${n('semana','Recordatorios de la semana (días)','Muestra las visitas y cumple 
 
 function listHtml(){if(!S.kids.length)return '<div class="card empty">Aún no hay niños. Usa «Agregar niño» para empezar.</div>';
   const ks=[...S.kids].sort((a,b)=>(a.visit||'9999')<(b.visit||'9999')?-1:1);
-  return weekHtml()+'<h2>Agenda de visitas</h2>'+ks.map(k=>{const i=info(k),v=visit(k);
-    return `<button class="kid" data-act="sel" data-id="${k.id}"><b>${k.cupo?'#'+esc(k.cupo)+' · ':''}${esc(k.nm||'Sin nombre')}</b><span class="a">${sexo[k.sx||'']}${k.modulo?' · '+esc(k.modulo):''} · ${i&&!i.bad?i.cl:'Falta fecha de nacimiento'}</span><span class="chip ${v.c}">${v.t}</span></button>`}).join('')}
+  return weekHtml()+'<h2>🧒 Agenda de visitas</h2>'+ks.map(k=>{const i=info(k),v=visit(k);
+    return `<button class="kid" data-act="sel" data-id="${k.id}" data-sx="${k.sx||''}" data-ini="${esc((k.nm||'?').trim().charAt(0).toUpperCase())}"><b>${k.cupo?'#'+esc(k.cupo)+' · ':''}${esc(k.nm||'Sin nombre')}</b><span class="a">${sexo[k.sx||'']}${k.modulo?' · '+esc(k.modulo):''} · ${i&&!i.bad?i.cl:'Falta fecha de nacimiento'}</span><span class="chip ${v.c}">${v.t}</span></button>`}).join('')}
 
 function detailHtml(k){const i=info(k),v=visit(k),vi=k.visit&&k.bs?info(k,k.visit):null;
-  const form=`<section class="card"><h2>Datos</h2><div class="g2">
+  const form=`<section class="card"><h2>📋 Datos</h2><div class="g2">
   <div><label>N.º de cupo</label><input data-f="cupo" value="${esc(k.cupo)}"></div>
   <div><label>Nombre del niño</label><input data-f="nm" value="${esc(k.nm)}"></div>
   <div><label>Sexo</label><select data-f="sx"><option value=""${k.sx?'':' selected'}>Sin indicar</option><option value="f"${k.sx==='f'?' selected':''}>Niña</option><option value="m"${k.sx==='m'?' selected':''}>Niño</option></select></div>
@@ -113,18 +113,18 @@ function detailHtml(k){const i=info(k),v=visit(k),vi=k.visit&&k.bs?info(k,k.visi
       return `<li class="${c}"><span class="t">${m.lb}</span><span class="d">${fd(dt)}</span><span class="s">${s}</span></li>`}).join('');
     const wk=Math.floor(i.days/7),wd=i.days%7;
     body=`<section class="card hero"><p>${esc(k.nm||'Edad')}${k.sx?' · '+sexo[k.sx]:''}</p><div class="age">${i.cl}</div><p>${i.inf?i.inf+' · ':''}${i.ex}</p></section>
-    <section class="card"><h2>Edad exacta</h2><div class="stats">
+    <section class="card"><h2>🎂 Edad exacta</h2><div class="stats">
     <div class="stat"><b>${i.days}</b><span>días de vida</span></div>
     <div class="stat"><b>${wk}</b><span>semanas${wd?' + '+pl(wd,'día','días'):''}</span></div>
     <div class="stat"><b>${i.tm}</b><span>meses cumplidos</span></div>
     <div class="stat"><b>${i.x.y}</b><span>años cumplidos</span></div></div>
     <div class="btns" style="margin-top:14px"><button data-act="copy">Copiar para el expediente</button></div><div class="msg" role="status">${esc(S.msg)}</div></section>
-    <section class="card"><h2>Fechas de control</h2><ul class="tl">${items||'<li class="d">Sin fechas configuradas.</li>'}</ul></section>`}
+    <section class="card"><h2>🩺 Fechas de control</h2><ul class="tl">${items||'<li class="d">Sin fechas configuradas.</li>'}</ul></section>`}
   const log=[...(k.log||[])].map((e,ix)=>({...e,ix})).sort((a,b)=>a.d<b.d?1:-1);
   const last=log[0]?dd(pd(log[0].d).date,now()):null;
   const pn=i&&!i.bad?planFor(i.tm):null;
-  const plan=pn?`<section class="card"><h2>Plan de actividades · ${pn[1]}</h2><ul class="tl">${pn[2].map(a=>`<li class="${areaCls(a[0])}"><span class="area-tag">${esc(a[0])}</span><span class="t">${a[1]}</span></li>`).join('')}</ul><p class="note">Ideas generales de juego. Adáptalas al ritmo de cada niño y consulta si notas retrasos.</p></section>`:'';
-  const est=`<section class="card"><h2>Seguimiento de estimulación</h2>
+  const plan=pn?`<section class="card"><h2>🎯 Plan de actividades · ${pn[1]}</h2><ul class="tl">${pn[2].map(a=>`<li class="${areaCls(a[0])}"><span class="area-tag">${esc(a[0])}</span><span class="t">${a[1]}</span></li>`).join('')}</ul><p class="note">Ideas generales de juego. Adáptalas al ritmo de cada niño y consulta si notas retrasos.</p></section>`:'';
+  const est=`<section class="card"><h2>📝 Seguimiento de estimulación</h2>
   <p class="note" style="margin:0 0 10px">${log.length?pl(log.length,'sesión registrada','sesiones registradas')+(last!=null?' · última hace '+pl(last,'día','días'):''):'Aún no hay sesiones registradas.'}</p>
   <div class="g2"><div><label>Fecha</label><input type="date" id="ld" value="${iso(now())}"></div>
   <div><label>Área</label><select id="la">${AREAS.map(a=>`<option>${a}</option>`).join('')}</select></div></div>
