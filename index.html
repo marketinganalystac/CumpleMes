@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seguimiento de niños</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1F5F0;--card:#fff;--ink:#1D2B28;--mute:#5F706B;--line:#DCE5DF;--acc:#E9A23B;--accInk:#3A2705;--teal:#4E9A90;--tealBg:#E2F0ED;--tealDk:#3A7E75;--bad:#B4432F;--shadow:0 1px 2px rgba(29,43,40,.04),0 4px 14px rgba(29,43,40,.05);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121A18;--card:#1B2624;--ink:#EAF2EE;--mute:#9AB0AA;--line:#2A3936;--acc:#F0B455;--accInk:#2B1C02;--teal:#6CC0B5;--tealBg:#20332F;--tealDk:#8AD2C8;--bad:#F08A73;--shadow:0 1px 2px rgba(0,0,0,.2),0 4px 14px rgba(0,0,0,.25)}}
+:root[data-theme="dark"]{--bg:#121A18;--card:#1B2624;--ink:#EAF2EE;--mute:#9AB0AA;--line:#2A3936;--acc:#F0B455;--accInk:#2B1C02;--teal:#6CC0B5;--tealBg:#20332F;--tealDk:#8AD2C8;--bad:#F08A73;--shadow:0 1px 2px rgba(0,0,0,.2),0 4px 14px rgba(0,0,0,.25)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Nunito,system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:0 16px 56px}
+
+/* Cabecera fija, separada visualmente del contenido */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding:18px 0 14px;margin-bottom:10px;background:var(--bg)}
+.top::after{content:'';position:absolute;left:-16px;right:-16px;bottom:0;height:1px;background:var(--line)}
+h1{font:600 clamp(22px,5vw,28px)/1.15 Fraunces,Georgia,serif;margin:0}
+h2{font:600 18px/1.2 Fraunces,Georgia,serif;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+h2::before{content:'';width:4px;height:16px;border-radius:2px;background:var(--teal);display:inline-block}
+
+/* Encabezado de sección de lista, para separar del resumen semanal */
+main>h2{margin:26px 0 12px 2px}
+main>h2::before{background:var(--acc)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.g2{grid-template-columns:1fr}}
+label{display:block;font-weight:700;font-size:13px;letter-spacing:.01em;color:var(--mute);margin-bottom:5px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;transition:border-color .15s}
+input:hover,select:hover,textarea:hover{border-color:var(--tealDk)}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.hint,.note{font-size:13px;color:var(--mute);margin-top:5px;line-height:1.4}
+button{font:inherit;font-size:14px;font-weight:800;border:0;border-radius:999px;padding:10px 18px;min-height:44px;cursor:pointer;background:var(--teal);color:#fff;transition:filter .15s,transform .1s}
+button:hover{filter:brightness(1.06)}
+button:active{transform:scale(.98)}
+button.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+button.sec:hover{border-color:var(--tealDk)}
+button.bad{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+#nav{padding:4px;border-radius:999px}
+#nav button.sec{border-color:transparent;background:transparent}
+#nav button.sec:hover{background:var(--tealBg)}
+
+/* Fila de niño en la lista */
+.kid{display:grid;grid-template-columns:1fr auto;gap:4px 12px;width:100%;text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow);transition:border-color .15s,transform .1s}
+.kid:hover{border-color:var(--tealDk);transform:translateY(-1px)}
+.kid b{font-size:16px;font-weight:800}
+.kid .a{color:var(--mute);font-weight:600;font-size:13.5px}
+.chip{grid-row:1/3;grid-column:2;align-self:center;font-size:12.5px;font-weight:800;padding:5px 12px;border-radius:999px;background:var(--tealBg);color:var(--tealDk);white-space:nowrap}
+.chip.warn{background:var(--acc);color:var(--accInk)}.chip.late{background:var(--bad);color:#fff}
+
+.hero{background:var(--acc);color:var(--accInk);border:0;text-align:center;padding:26px 16px}
+.hero .age{font:600 clamp(30px,8vw,46px)/1.05 Fraunces,Georgia,serif;margin:8px 0}
+.hero p{margin:0;font-weight:700;font-size:14px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--tealBg);border-radius:12px;padding:12px}
+.stat b{display:block;font:600 22px/1.1 Fraunces,Georgia,serif;color:var(--tealDk)}.stat span{font-size:12.5px;color:var(--mute);font-weight:600}
+
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:1fr auto;gap:3px 12px;padding:12px 0;border-top:1px solid var(--line);align-items:center}
+.tl li:first-child{border-top:0;padding-top:2px}
+.tl .t{font-weight:800;font-size:14.5px}.tl .d{font-size:13px;color:var(--mute)}
+.tl .s{grid-row:1/3;grid-column:2;font-size:12.5px;font-weight:800;padding:5px 12px;border-radius:999px;background:var(--tealBg);color:var(--tealDk);white-space:nowrap}
+.tl li.next .s{background:var(--acc);color:var(--accInk)}.tl li.done .t{color:var(--mute);font-weight:700}
+.tl button{min-height:34px;padding:4px 14px;grid-row:1/3;grid-column:2}
+
+/* Colores por área de desarrollo: cada una con su propia identidad visual */
+:root{--mg:#3E7CB1;--mgBg:#E3EDF6;--mf:#7B5EA7;--mfBg:#ECE6F5;--le:#C1622C;--leBg:#F7E8DD;--co:#4E9A90;--coBg:#E2F0ED;--se:#B14B78;--seBg:#F5E3EC}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--mg:#7FB0DE;--mgBg:#233649;--mf:#B7A0E0;--mfBg:#2E2740;--le:#E7A272;--leBg:#3B2A1E;--co:#6CC0B5;--coBg:#20332F;--se:#E497BB;--seBg:#3A2431}}
+:root[data-theme="dark"]{--mg:#7FB0DE;--mgBg:#233649;--mf:#B7A0E0;--mfBg:#2E2740;--le:#E7A272;--leBg:#3B2A1E;--co:#6CC0B5;--coBg:#20332F;--se:#E497BB;--seBg:#3A2431}
+.tl li.a-mg,.tl li.a-mf,.tl li.a-le,.tl li.a-co,.tl li.a-se{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding-left:12px;border-left:3px solid transparent;border-top:1px solid var(--line)}
+.tl li.a-mg:first-child,.tl li.a-mf:first-child,.tl li.a-le:first-child,.tl li.a-co:first-child,.tl li.a-se:first-child{border-top:0}
+.tl li.a-mg,.tl li.a-mf,.tl li.a-le,.tl li.a-co,.tl li.a-se{background:transparent}
+.area-tag{font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px;white-space:nowrap}
+.tl li.a-mg{border-left-color:var(--mg)}.tl li.a-mg .area-tag{background:var(--mgBg);color:var(--mg)}
+.tl li.a-mf{border-left-color:var(--mf)}.tl li.a-mf .area-tag{background:var(--mfBg);color:var(--mf)}
+.tl li.a-le{border-left-color:var(--le)}.tl li.a-le .area-tag{background:var(--leBg);color:var(--le)}
+.tl li.a-co{border-left-color:var(--co)}.tl li.a-co .area-tag{background:var(--coBg);color:var(--co)}
+.tl li.a-se{border-left-color:var(--se)}.tl li.a-se .area-tag{background:var(--seBg);color:var(--se)}
+.tl li.a-mg .d,.tl li.a-mf .d,.tl li.a-le .d,.tl li.a-co .d,.tl li.a-se .d{flex:1 1 220px}
+.tl li.a-mg button,.tl li.a-mf button,.tl li.a-le button,.tl li.a-co button,.tl li.a-se button{margin-left:auto}
+
+.empty{color:var(--mute);text-align:center;padding:32px 18px}
+.msg{min-height:20px;font-size:13.5px;color:var(--tealDk);font-weight:700;margin-top:8px}
+footer.note{text-align:center;margin:28px 0 0;padding-top:16px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><h1>Seguimiento de niños</h1>
+<div class="btns" id="nav" style="display:none"><button data-act="add">Agregar niño</button><button class="sec" data-act="export">⬇ Descargar registro</button><button class="sec" data-act="cfg">⚙ Configuración</button><button class="sec" data-act="out">Salir</button></div></div>
+<div id="app"></div>
+<footer class="note">Tus datos se guardan en tu cuenta. Las fechas de control son referencias: confirma el calendario con el pediatra.</footer>
+</main>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
