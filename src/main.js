@@ -26,7 +26,15 @@ async function load(){const [a,b]=await Promise.all([sb.from('ninos').select('*,
 async function auth(a){const c={email:$('em').value.trim(),password:$('pw').value};S.em=c.email;
   const r=a==='login'?await sb.auth.signInWithPassword(c):await sb.auth.signUp(c);
   S.err=r.error?r.error.message:(a==='signup'&&!r.data.session?'Revisa tu correo para confirmar la cuenta.':'');render()}
-function loginHtml(){return `<section class="card"><h2>👋 Inicia sesión</h2><div class="g2"><div><label for="em">Correo</label><input id="em" type="email" autocomplete="email" value="${esc(S.em)}"></div><div><label for="pw">Contraseña</label><input id="pw" type="password" autocomplete="current-password"></div></div><div class="btns" style="margin-top:14px"><button data-act="login">Entrar</button><button class="sec" data-act="signup">Crear cuenta</button></div>${S.err?`<div class="msg" style="color:var(--bad)" role="alert">${esc(S.err)}</div>`:''}</section>`}
+function loginHtml(){return `<section class="card login-card">
+  <div class="login-badge">🌱</div>
+  <h1 class="login-title">Bienvenido</h1>
+  <p class="login-sub">Un espacio cálido y ordenado para acompañar el crecimiento de cada niño, mes a mes.</p>
+  <div class="g2"><div><label for="em">Correo</label><input id="em" type="email" autocomplete="email" value="${esc(S.em)}"></div><div><label for="pw">Contraseña</label><input id="pw" type="password" autocomplete="current-password"></div></div>
+  <div class="btns" style="margin-top:16px;justify-content:center"><button data-act="login">Entrar</button><button class="sec" data-act="signup">Crear cuenta</button></div>
+  ${S.err?`<div class="msg" style="color:var(--bad)" role="alert">${esc(S.err)}</div>`:''}
+  <div class="login-tags"><span>🎯 Plan de actividades</span><span>🩺 Fechas de control</span><span>📅 Recordatorios</span></div>
+  </section>`}
 function addMonths(b,n){const t=b.m-1+n,y=b.y+Math.floor(t/12),m=((t%12)+12)%12;return new Date(y,m,Math.min(b.d,dim(y,m)),12)}
 function diff(b,r){let tm=(r.y-b.y)*12+r.m-b.m;if(addMonths(b,tm)>r.date)tm--;return {y:Math.floor(tm/12),m:tm%12,d:dd(addMonths(b,tm),r.date)}}
 function clinical(days,x){const tm=x.y*12+x.m;
@@ -135,6 +143,7 @@ function detailHtml(k){const i=info(k),v=visit(k),vi=k.visit&&k.bs?info(k,k.visi
   return `<div class="btns" style="margin-bottom:14px"><button class="sec" data-act="back">← Todos los niños</button></div>${body}${plan}${est}${form}<div class="btns">${del}</div>`}
 
 function render(){const k=S.kids.find(x=>x.id===S.sel);
+  document.body.classList.toggle('login-view',S.ready&&!S.user);
   $('nav').style.display=S.user?'':'none';
   $('app').innerHTML=!S.ready?'':!S.user?loginHtml():(S.err?`<div class="card msg" style="color:var(--bad)" role="alert">${esc(S.err)}</div>`:'')+(S.cfgOpen?cfgHtml():'')+(k?detailHtml(k):listHtml())}
 
