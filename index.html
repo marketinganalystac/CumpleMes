@@ -16,16 +16,8 @@
 --bad:#E4685A;--badBg:#FCE4E1;
 --shadow:0 2px 6px rgba(58,51,80,.05),0 12px 28px rgba(58,51,80,.08);
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1B1826;--card:#241F33;--ink:#F1EDF9;--mute:#A79FC0;--line:#352E48;
---brand:#FF9FBB;--brandDk:#FFB2C9;--brandBg:#3D2530;
---peach:#FFC896;--peachBg:#402A18;--peachInk:#FFD9AE;
---sky:#8FCCF2;--skyBg:#1E3346;--skyInk:#BEE2FA;
---mint:#8FDFBB;--mintBg:#1B3A2C;--mintInk:#B7EDD1;
---lav:#C0AAEF;--lavBg:#2E2645;--lavInk:#D9C9F7;
---rose:#F492B4;--roseBg:#3B2130;--roseInk:#F7B8CE;
---bad:#F0897A;--badBg:#3E211D;
---shadow:0 2px 6px rgba(0,0,0,.25),0 12px 28px rgba(0,0,0,.3)}}
-:root[data-theme="dark"]{--bg:#1B1826;--card:#241F33;--ink:#F1EDF9;--mute:#A79FC0;--line:#352E48;
+/* Modo oscuro solo si se activa manualmente (data-theme="dark"); no sigue al sistema */
+:root[data-theme="dark"]{--bg:#211F2B;--card:#2C2938;--ink:#F1EDF9;--mute:#B0A8C4;--line:#3D3A4D;
 --brand:#FF9FBB;--brandDk:#FFB2C9;--brandBg:#3D2530;
 --peach:#FFC896;--peachBg:#402A18;--peachInk:#FFD9AE;
 --sky:#8FCCF2;--skyBg:#1E3346;--skyInk:#BEE2FA;
@@ -127,7 +119,6 @@ body.login-view .top,body.login-view footer.note{display:none}
 
 /* Colores pastel por área de desarrollo */
 :root{--mg:#5B93C9;--mgBg:#E6F0FA;--mf:#9679D1;--mfBg:#F0E9FB;--le:#E08A4C;--leBg:#FDEEDF;--co:#4FAF8B;--coBg:#E1F5ED;--se:#E06B96;--seBg:#FCE6EF}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--mg:#8FBEE9;--mgBg:#22364C;--mf:#C2A9F0;--mfBg:#2F2748;--le:#F2B37E;--leBg:#40301E;--co:#82DAB4;--coBg:#1C3A2E;--se:#F19FBE;--seBg:#3C2434}}
 :root[data-theme="dark"]{--mg:#8FBEE9;--mgBg:#22364C;--mf:#C2A9F0;--mfBg:#2F2748;--le:#F2B37E;--leBg:#40301E;--co:#82DAB4;--coBg:#1C3A2E;--se:#F19FBE;--seBg:#3C2434}
 .tl li.a-mg,.tl li.a-mf,.tl li.a-le,.tl li.a-co,.tl li.a-se{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding-left:12px;border-left:4px solid transparent;border-top:1px solid var(--line)}
 .tl li.a-mg:first-child,.tl li.a-mf:first-child,.tl li.a-le:first-child,.tl li.a-co:first-child,.tl li.a-se:first-child{border-top:0}
